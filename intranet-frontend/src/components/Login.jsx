@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import { useNavigate  } from 'react-router-dom';
+import React, { useState } from "react";
+import axios from "axios";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
-  const [firstname, setFirstname] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  const [firstname, setFirstname] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/login', { firstname, password });
+      const response = await axios.post("http://localhost:8000/api/login", {
+        firstname,
+        password,
+      });
       console.log(response.data);
-      navigate('/');
+      const token = response.data.token;
+      localStorage.setItem("token", token);
+
+      console.log("Stored Token:", token);
+      window.location.href = "/";
     } catch (error) {
       console.error(error);
     }
@@ -23,9 +29,17 @@ function Login() {
       <Container className="mt-5">
         <Row className="justify-content-md-center">
           <Col xs={12} md={8} lg={6}>
-            <Form className="p-4 border rounded d-flex flex-column justify-content-md-center"> {/* Ajout de marges intérieures et contours */}
-              <h3 className="mb-4 d-flex justify-content-md-center">Login</h3> {/* Ajout d'un titre */}
-              <Form.Group className="d-flex flex-column" controlId="formFirstname">
+            <Form className="p-4 border rounded d-flex flex-column justify-content-md-center">
+              {" "}
+              {/* Ajout de marges intérieures et contours */}
+              <h3 className="mb-4 d-flex justify-content-md-center">
+                Login
+              </h3>{" "}
+              {/* Ajout d'un titre */}
+              <Form.Group
+                className="d-flex flex-column"
+                controlId="formFirstname"
+              >
                 <Form.Label className="align-self-center">Firstname</Form.Label>
                 <Form.Control
                   type="text"
@@ -35,8 +49,10 @@ function Login() {
                   className="w-75 m-auto"
                 />
               </Form.Group>
-
-              <Form.Group className="mt-4 d-flex flex-column" controlId="formPassword">
+              <Form.Group
+                className="mt-4 d-flex flex-column"
+                controlId="formPassword"
+              >
                 <Form.Label className="align-self-center">Password</Form.Label>
                 <Form.Control
                   type="password"
@@ -46,8 +62,11 @@ function Login() {
                   className="w-75 m-auto"
                 />
               </Form.Group>
-
-              <Button variant="primary" onClick={handleLogin} className="mt-3 w-50 m-auto">
+              <Button
+                variant="primary"
+                onClick={handleLogin}
+                className="mt-3 w-50 m-auto"
+              >
                 Login
               </Button>
             </Form>

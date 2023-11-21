@@ -30,7 +30,7 @@ app.use('/api', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api', employeeRoutes);
 app.use('/api', locationRoutes);
-app.use('/api', profileRoute);
+app.use('/api/user', profileRoute);
 
 // Start server
 app.listen(PORT, () => {

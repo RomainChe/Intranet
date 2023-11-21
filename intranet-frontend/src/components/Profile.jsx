@@ -33,7 +33,12 @@ function Profile() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/user/profile');
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:8000/api/user/profile', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
         setUser(response.data);
       } catch (error) {
         console.error(error);
@@ -44,8 +49,8 @@ function Profile() {
   }, []);
 
   return (
-    <Container>
-      <h2>Profil de l'utilisateur</h2>
+    <Container className='mt-5'>
+      <h2 className='d-flex justify-content-center'>Profil de l'utilisateur</h2>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formFirstname">
           <Form.Label>Prénom</Form.Label>

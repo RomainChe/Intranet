@@ -5,6 +5,7 @@ import TopBar from './components/Topbar.jsx';
 import Home from './components/Home.jsx';
 import Login from './components/Login.jsx';
 import EmployeeList from './components/EmployeeList.jsx';
+import Profile from './components/Profile.jsx';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route exact path="/"  element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/employees" element={<EmployeeList />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
   );

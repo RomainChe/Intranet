@@ -9,6 +9,7 @@ function TopBar() {
     const navigate = useNavigate();
 
     const handleLogout = () => {
+        localStorage.removeItem('token');
         setRedirect(true);
     };
 
