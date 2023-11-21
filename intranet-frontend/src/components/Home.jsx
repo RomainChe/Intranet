@@ -18,13 +18,48 @@ function Home() {
     }, []);
   return (
     <div>
-      <h1>Page d'accueil</h1>
       {randomUser && (
-        <div>
-          <h2>Collaborateur aléatoire</h2>
-          <p>Nom: {randomUser.firstname}</p>
-          {/* Ajoutez d'autres informations sur le collaborateur ici */}
+        <div className="card bg-light">
+        <div className="card-body">
+          <h2 className="card-title text-primary">Collaborateur aléatoire</h2>
+          <div className="row align-items-center">
+            <div className="col-md-4 text-center">
+              <img
+                src={randomUser.photo}
+                alt=""
+                className="img-fluid rounded-circle"
+                style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+              />
+            </div>
+            <div className="col-md-8">
+              <p className="card-text">
+                <strong>Prénom:</strong> {randomUser.firstname}
+              </p>
+              <p className="card-text">
+                <strong>Nom:</strong> {randomUser.lastname}
+              </p>
+              <p className="card-text">
+                <strong>Email:</strong> {randomUser.email}
+              </p>
+              <p className="card-text">
+                <strong>Phone:</strong> {randomUser.phone}
+              </p>
+              <p className="card-text">
+                <strong>Date de naissance :</strong> {randomUser.birthdate}
+              </p>
+              <p className="card-text">
+                <strong>Ville:</strong> {randomUser.city}
+              </p>
+              <p className="card-text">
+                <strong>Pays :</strong> {randomUser.country}
+              </p>
+              <p className="card-text text-muted">
+                <em>{randomUser.category}</em>
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
       )}
     </div>
   );

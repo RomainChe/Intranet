@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { useNavigate  } from 'react-router-dom';
 
 function Login() {
   const [firstname, setFirstname] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
       const response = await axios.post('http://localhost:8000/api/login', { firstname, password });
       console.log(response.data);
+      navigate('/');
     } catch (error) {
       console.error(error);
     }
