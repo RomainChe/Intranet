@@ -3,6 +3,9 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoute.js');
 const userRoutes  = require('./routes/user.js');
+const employeeRoutes  = require('./routes/employeeRoute.js');
+const locationRoutes  = require('./routes/locationRoute.js');
+const profileRoute  = require('./routes/profileRoute.js');
 const cors = require('cors');
 require('dotenv').config();
 
@@ -25,6 +28,9 @@ app.use(bodyParser.json());
 
 app.use('/api', authRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api', employeeRoutes);
+app.use('/api', locationRoutes);
+app.use('/api', profileRoute);
 
 // Start server
 app.listen(PORT, () => {

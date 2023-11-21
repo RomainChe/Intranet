@@ -22,7 +22,7 @@ function TopBar() {
 
     return (
         <Navbar bg="dark" variant="dark">
-            <Navbar.Brand as={Link} to="/list">
+            <Navbar.Brand as={Link} to="/employees">
                 Liste des colaborateurs
             </Navbar.Brand>
             <Nav className="mr-auto">
