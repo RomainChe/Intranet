@@ -1,15 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoute.js');
+const userRoutes  = require('./routes/user.js');
 const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+app.use(cors({ origin: '*' }));
 
 // Connect to MongoDB
 mongoose
@@ -24,6 +24,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 app.use(bodyParser.json());
 
 app.use('/api', authRoutes);
+app.use('/api/user', userRoutes);
 
 // Start server
 app.listen(PORT, () => {

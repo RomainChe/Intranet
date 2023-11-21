@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import TopBar from './Topbar.jsx';
 
 function Login() {
-  const [username, setUsername] = useState('');
+  const [firstname, setFirstname] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/login', { username, password });
+      const response = await axios.post('http://localhost:8000/api/login', { firstname, password });
       console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -18,19 +17,18 @@ function Login() {
 
   return (
     <>
-      <TopBar />
       <Container className="mt-5">
         <Row className="justify-content-md-center">
           <Col xs={12} md={8} lg={6}>
             <Form className="p-4 border rounded d-flex flex-column justify-content-md-center"> {/* Ajout de marges intérieures et contours */}
               <h3 className="mb-4 d-flex justify-content-md-center">Login</h3> {/* Ajout d'un titre */}
-              <Form.Group className="d-flex flex-column" controlId="formUsername">
-                <Form.Label className="align-self-center">Username</Form.Label>
+              <Form.Group className="d-flex flex-column" controlId="formFirstname">
+                <Form.Label className="align-self-center">Firstname</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter your username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter your firstname"
+                  value={firstname}
+                  onChange={(e) => setFirstname(e.target.value)}
                   className="w-75 m-auto"
                 />
               </Form.Group>
