@@ -1,11 +1,16 @@
-import React from "react";
+import React from 'react';
+import { Navbar, Nav } from 'react-bootstrap';
 
 function TopBar() {
   return (
-    <header>
-      <h1>Mon Application</h1>
-      {/* Ajoutez d'autres éléments de l'en-tête ici */}
-    </header>
+    <Navbar bg="dark" variant="dark">
+      <Navbar.Brand href="#home">Mon Application</Navbar.Brand>
+      <Nav className="mr-auto">
+        <Nav.Link href="#home">Accueil</Nav.Link>
+        <Nav.Link href="#features">Fonctionnalités</Nav.Link>
+        <Nav.Link href="#pricing">Tarification</Nav.Link>
+      </Nav>
+    </Navbar>
   );
 }
 
