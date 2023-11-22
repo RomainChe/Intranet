@@ -2,19 +2,27 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const cookie = require('cookie');
 const User = require("../models/User");
 
 router.post("/login", async (req, res) => {
   const { firstname, password } = req.body;
+  let isAdmin = false;
 
   try {
     const user = await User.findOne({ firstname });
+    const payload = {
+      userId: 1234567890
+    };
 
     if (user && bcrypt.compareSync(password, user._doc.password)) {
-      const token = jwt.sign({ userId: user._id }, "votre_clé_secrète");
+      const token = jwt.sign(payload, process.env.JWT_SECRET , {
+        algorithm: 'HS256',
+      });
+      if (user.isAdmin === true) {
+        isAdmin = true;
+      }
 
-      res.json({ success: true, message: "Login successful", token });
+      res.json({ success: true, message: "Login successful", token, isAdmin });
     } else {
       res
         .status(401)

@@ -1,50 +1,51 @@
 // TopBar.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Navbar, Nav } from "react-bootstrap";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate } from "react-router-dom";
 
 function TopBar() {
-    const [isLoggedIn, setIsLoggedIn] = useState(true); // Initialisez avec l'état initial approprié
-    const [redirect, setRedirect] = useState(false);
-    const navigate = useNavigate();
+  const [isLoggedIn] = useState(localStorage.getItem("token") !== null);
+  const [isAdmin] = useState(localStorage.getItem("admin") !== null);
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        setRedirect(true);
-    };
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    // Redirige vers la page de connexion après la déconnexion
+    return <Navigate to="/login" />;
+  };
 
-    useEffect(() => {
-        if (redirect) {
-            navigate("/login");
-            setRedirect(false);
-            setIsLoggedIn(false);
-        }
-    }, [redirect, navigate]);
-
-    return (
-        <Navbar bg="dark" variant="dark">
+  return (
+    <Navbar bg="dark" variant="dark">
+      <Nav className="mr-auto">
+        {isLoggedIn ? (
+          <>
             <Navbar.Brand as={Link} to="/employees">
-                Liste des colaborateurs
+              Liste des collaborateurs
             </Navbar.Brand>
-            <Nav className="mr-auto">
-                <Nav.Link as={Link} to="/">
-                    Accueil
-                </Nav.Link>
-                {isLoggedIn ? (
-                    <>
-                        <Nav.Link as={Link} to="/profile">
-                            Profil
-                        </Nav.Link>
-                        <Nav.Link onClick={handleLogout}>Déconnexion</Nav.Link>
-                    </>
-                ) : (
-                    <Nav.Link as={Link} to="/login">
-                        Connexion
-                    </Nav.Link>
-                )}
-            </Nav>
-        </Navbar>
-    );
+            <Nav.Link as={Link} to="/">
+              Accueil
+            </Nav.Link>
+            <Nav.Link as={Link} to="/profile">
+              Profil
+            </Nav.Link>
+            <Nav.Link onClick={handleLogout}>Déconnexion</Nav.Link>
+          </>
+        ) : (
+          <Nav.Link as={Link} to="/login">
+            Connexion
+          </Nav.Link>
+        )}
+        {isAdmin ? (
+          <>
+            <Nav.Link as={Link} to="/add-employee">
+              Ajouter
+            </Nav.Link>
+          </>
+        ) : (
+          {}
+        )}
+      </Nav>
+    </Navbar>
+  );
 }
 
 export default TopBar;

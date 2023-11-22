@@ -1,21 +1,32 @@
 const jwt = require("jsonwebtoken");
 
-const authenticateToken = (req, res, next) => {
-  const token = req.header("Authorization");
+const verifyToken = async (req, res, next) => {
+  const token = req.headers['authorization'];
 
   if (!token) {
-    return res.status(401).json({ success: false, message: "Accès non autorisé" });
+    return res.status(401).json({ message: 'Unauthorized' });
   }
 
-  jwt.verify(token, "votre_clé_secrète", (err, user) => {
-    if (err) {
-      console.error("Erreur de vérification du jeton:", err);
-      return res.status(403).json({ success: false, message: "Accès non autorisé" });
+  try {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET, {
+      algorithm: 'HS256',
+    });
+    const userId = decodedToken.userId;
+
+    req.user = await User.findById(userId);
+
+    if (!req.user) {
+      return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    req.user = user;
     next();
-  });
+  } catch (error) {
+    if (error.name === 'JsonWebTokenError') {
+      return res.status(401).json({ message: 'Invalid token' });
+    }
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
 };
 
-module.exports = authenticateToken;
+module.exports = verifyToken;

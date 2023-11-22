@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [firstname, setFirstname] = useState("");
@@ -13,11 +12,11 @@ function Login() {
         firstname,
         password,
       });
-      console.log(response.data);
-      const token = response.data.token;
-      localStorage.setItem("token", token);
 
-      console.log("Stored Token:", token);
+      const token = response.data.token;
+      const isAdmin = response.data.isAdmin;
+      localStorage.setItem("token", token);
+      localStorage.setItem("admin", isAdmin);
       window.location.href = "/";
     } catch (error) {
       console.error(error);

@@ -2,13 +2,8 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema({
-    id: {
-        type: String,
-        required: true,
-      },
       gender: {
         type: String,
-        required: true,
       },
       firstname: {
         type: String,
@@ -61,6 +56,26 @@ userSchema.pre("save", function (next) {
     });
   });
 });
+
+userSchema.statics.findByToken = function (token) {
+  const User = this;
+
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      if (err) {
+        return reject(err);
+      }
+
+      User.findOne({ _id: decoded.userId }, (err, user) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(user);
+        }
+      });
+    });
+  });
+};
 
 const User = mongoose.model("User", userSchema);
 

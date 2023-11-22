@@ -76,4 +76,27 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-module.exports = { getRandomUser, getUserProfile, updateUserProfile };
+const addEmployee = async (req, res) => {
+  try {
+    const { firstname, lastname, birthdate, city, country, email } = req.body;
+
+    const newEmployee = new User({
+      firstname,
+      lastname,
+      birthdate,
+      city,
+      country,
+      email,
+    });
+
+    await newEmployee.save();
+
+    res.status(201).json({ success: true, message: 'Collaborateur ajouté avec succès' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Erreur interne du serveur' });
+  }
+};
+
+
+module.exports = { getRandomUser, getUserProfile, updateUserProfile, addEmployee };

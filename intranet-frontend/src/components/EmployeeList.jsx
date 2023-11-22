@@ -86,7 +86,7 @@ function EmployeeList() {
         <h2>Liste des Collaborateurs</h2>
         <div className="row">
           {employees.map((employee) => (
-            <Col key={employee.id} md={4} className="col-md-4 mb-4">
+            <Col key={employee._id} md={4} className="col-md-4 mb-4">
               <div className="card">
                 <img
                   src={employee.photo}
