@@ -1,16 +1,16 @@
 // TopBar.jsx
 import React, { useState } from "react";
 import { Navbar, Nav } from "react-bootstrap";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function TopBar() {
   const [isLoggedIn] = useState(localStorage.getItem("token") !== null);
   const [isAdmin] = useState(localStorage.getItem("admin") !== null);
 
   const handleLogout = () => {
+    localStorage.removeItem("admin");
     localStorage.removeItem("token");
-    // Redirige vers la page de connexion après la déconnexion
-    return <Navigate to="/login" />;
+    window.location.href = "/login";
   };
 
   return (
@@ -40,9 +40,7 @@ function TopBar() {
               Ajouter
             </Nav.Link>
           </>
-        ) : (
-          {}
-        )}
+        ) : null}
       </Nav>
     </Navbar>
   );

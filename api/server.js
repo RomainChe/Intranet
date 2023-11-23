@@ -1,5 +1,7 @@
 const express = require('express');
+const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const connectMongo = require('connect-mongo');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoute.js');
@@ -13,19 +15,33 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors({ origin: '*' }));
-app.use(cookieParser());
-
-// Connect to MongoDB
 mongoose
   .connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`)
     .then(() => console.log("Connexion établie !"))
     .catch((err) => console.log(err));
 const db = mongoose.connection;
 
+const MongoStore = connectMongo.create({
+  mongoUrl: `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
+  collection: 'sessions',
+});
+
+const sessionOptions = {
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore,
+  cookie: {
+    httpOnly: true,
+  },
+};
+
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-// Body parser middleware
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+app.use(session(sessionOptions));
+app.use(cookieParser());
+
 app.use(bodyParser.json());
 
 app.use('/api', authRoutes);

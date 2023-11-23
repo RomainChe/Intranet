@@ -1,9 +1,11 @@
 // EmployeeList.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, Row, Col, Form } from "react-bootstrap";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 function EmployeeList() {
+  const navigate = useNavigate();
   const [employees, setEmployees] = useState([]);
   const [nameFilter, setNameFilter] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
@@ -43,6 +45,15 @@ function EmployeeList() {
     fetchEmployees();
     fetchAllLocations();
   }, [nameFilter, locationFilter, categoryFilter]);
+
+  const isAdmin = localStorage.getItem("admin") === "true";
+
+  const handleEdit = async (employeeId) => {
+    navigate(`/edit-employee/${employeeId}`);
+    console.log(
+      `Rediriger vers la page de modification pour l'employé ${employeeId}`
+    );
+  };
 
   return (
     <Container>
@@ -108,6 +119,14 @@ function EmployeeList() {
                   <p className="card-text">
                     <strong>Pays :</strong> {employee.country}
                   </p>
+                  {isAdmin && (
+                    <Button
+                      variant="primary"
+                      onClick={() => handleEdit(employee._id)}
+                    >
+                      Modifier
+                    </Button>
+                  )}
                 </div>
               </div>
             </Col>

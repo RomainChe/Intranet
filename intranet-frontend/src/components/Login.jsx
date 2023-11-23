@@ -15,6 +15,8 @@ function Login() {
 
       const token = response.data.token;
       const isAdmin = response.data.isAdmin;
+      const userId = response.data.user_id;
+      localStorage.setItem("userId", userId);
       localStorage.setItem("token", token);
       localStorage.setItem("admin", isAdmin);
       window.location.href = "/";

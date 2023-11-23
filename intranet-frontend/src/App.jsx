@@ -7,6 +7,7 @@ import Login from './components/Login.jsx';
 import EmployeeList from './components/EmployeeList.jsx';
 import Profile from './components/Profile.jsx';
 import AddEmployee from './components/AddEmployee.jsx';
+import EditEmployee from './components/EditEmployee.jsx';
 
 const PrivateRoute = ({ element, ...rest }) => {
   const isAuthenticated = localStorage.getItem('token') !== null;
@@ -25,7 +26,7 @@ const AdminRoute = ({ element, ...rest }) => {
   return isAuthenticated && isAdmin ? (
     element
   ) : (
-    <Navigate to="/login" />
+    <Navigate to="/" />
   );
 };
 
@@ -40,6 +41,7 @@ function App() {
         <Route path="/profile" element={<PrivateRoute element={<Profile />} />} />
         <Route path="/update-profile" element={<PrivateRoute element={<Profile />} />} />
         <Route path="/add-employee" element={<AdminRoute element={<AddEmployee />} />} />
+        <Route path="/edit-employee/:employeeId" element={<AdminRoute element={<EditEmployee />} />} />
       </Routes>
     </Router>
   );

@@ -13,7 +13,8 @@ const getRandomUser = async (req, res) => {
 
 const getUserProfile = async (req, res) => {
   try {
-    const userId = req.user.id;
+    console.log(req.session);
+    const userId = req.session.userId;
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ success: false, message: 'Utilisateur non trouvé' });
@@ -98,5 +99,48 @@ const addEmployee = async (req, res) => {
   }
 };
 
+const editEmployee = async (req, res) => {
+  try {
+    const employeeId = req.params.employeeId;
+    const { firstname, lastname, birthdate, city, country, email } = req.body;
 
-module.exports = { getRandomUser, getUserProfile, updateUserProfile, addEmployee };
+    const updatedEmployee = await User.findByIdAndUpdate(
+      employeeId,
+      {
+        $set: {
+          firstname,
+          lastname,
+          birthdate,
+          city,
+          country,
+          email,
+          isAdmin,
+        },
+      },
+      { new: true }
+    );
+
+    if (!updatedEmployee) {
+      return res.status(404).json({ success: false, message: 'Collaborateur non trouvé' });
+    }
+
+    res.json({
+      success: true,
+      message: 'Collaborateur mis à jour avec succès',
+      employee: {
+        firstname: updatedEmployee.firstname,
+        lastname: updatedEmployee.lastname,
+        birthdate: updatedEmployee.birthdate,
+        city: updatedEmployee.city,
+        country: updatedEmployee.country,
+        email: updatedEmployee.email,
+        isAdmin: updatedEmployee.isAdmin
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Erreur interne du serveur' });
+  }
+};
+
+module.exports = { getRandomUser, getUserProfile, updateUserProfile, addEmployee, editEmployee };

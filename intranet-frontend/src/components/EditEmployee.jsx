@@ -1,10 +1,12 @@
-// Profile.jsx
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Container, Form, Button } from "react-bootstrap";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 
-function Profile() {
-  const [user, setUser] = useState({
+const EditEmployee = () => {
+  const navigate = useNavigate();
+  const { employeeId } = useParams();
+  const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
     birthdate: "",
@@ -13,9 +15,24 @@ function Profile() {
     email: "",
   });
 
+  useEffect(() => {
+    const fetchEmployeeData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/user/employee/${employeeId}`
+        );
+        setFormData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchEmployeeData();
+  }, [employeeId]);
+
   const handleChange = (e) => {
-    setUser({
-      ...user,
+    setFormData({
+      ...formData,
       [e.target.name]: e.target.value,
     });
   };
@@ -23,52 +40,35 @@ function Profile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(
-        "http://localhost:8000/api/user/update-profile",
-        user
+      await axios.put(
+        `http://localhost:8000/api/user/edit-employee/${employeeId}`,
+        {
+          ...formData,
+          isAdmin: formData.isAdmin || false,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
       );
-      console.log(response.data);
+  
+      navigate('/employees');
     } catch (error) {
       console.error(error);
     }
   };
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchUserProfile = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8000/api/user/profile",
-          {
-            withCredentials: true,
-          }
-        );
-
-        if (isMounted) {
-          setUser(response.data);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchUserProfile();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
   return (
-    <Container className="mt-5">
-      <h2 className="d-flex justify-content-center">Profil de l'utilisateur</h2>
+    <Container>
+      <h2>Modifier un collaborateur</h2>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formFirstname">
           <Form.Label>Prénom</Form.Label>
           <Form.Control
             type="text"
             name="firstname"
-            value={user.firstname}
+            value={formData.firstname}
             onChange={handleChange}
           />
         </Form.Group>
@@ -78,7 +78,7 @@ function Profile() {
           <Form.Control
             type="text"
             name="lastname"
-            value={user.lastname}
+            value={formData.lastname}
             onChange={handleChange}
           />
         </Form.Group>
@@ -88,7 +88,7 @@ function Profile() {
           <Form.Control
             type="date"
             name="birthdate"
-            value={user.birthdate}
+            value={formData.birthdate}
             onChange={handleChange}
           />
         </Form.Group>
@@ -98,7 +98,7 @@ function Profile() {
           <Form.Control
             type="text"
             name="city"
-            value={user.city}
+            value={formData.city}
             onChange={handleChange}
           />
         </Form.Group>
@@ -108,7 +108,7 @@ function Profile() {
           <Form.Control
             type="text"
             name="country"
-            value={user.country}
+            value={formData.country}
             onChange={handleChange}
           />
         </Form.Group>
@@ -118,8 +118,20 @@ function Profile() {
           <Form.Control
             type="email"
             name="email"
-            value={user.email}
+            value={formData.email}
             onChange={handleChange}
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formIsAdmin">
+          <Form.Check
+            type="checkbox"
+            label="Administrateur"
+            name="isAdmin"
+            checked={formData.isAdmin}
+            onChange={(e) =>
+              setFormData({ ...formData, isAdmin: e.target.checked })
+            }
           />
         </Form.Group>
 
@@ -129,6 +141,6 @@ function Profile() {
       </Form>
     </Container>
   );
-}
+};
 
-export default Profile;
+export default EditEmployee;

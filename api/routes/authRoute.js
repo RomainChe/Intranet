@@ -11,7 +11,7 @@ router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ firstname });
     const payload = {
-      userId: 1234567890
+      userId: user.id
     };
 
     if (user && bcrypt.compareSync(password, user._doc.password)) {
@@ -21,7 +21,12 @@ router.post("/login", async (req, res) => {
       if (user.isAdmin === true) {
         isAdmin = true;
       }
-
+      req.session.user = {
+        userId: user.id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+      };
+      console.log(req.session.user);
       res.json({ success: true, message: "Login successful", token, isAdmin });
     } else {
       res
