@@ -55,6 +55,20 @@ function EmployeeList() {
     );
   };
 
+  const handleDelete = async (employeeId) => {
+    try {
+      await axios.delete(
+        `http://localhost:8000/api/delete-employee/${employeeId}`
+      );
+      setEmployees((prevEmployees) =>
+        prevEmployees.filter((employee) => employee._id !== employeeId)
+      );
+      console.log(`Employé supprimé avec succès: ${employeeId}`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Container>
       <Form>
@@ -120,12 +134,20 @@ function EmployeeList() {
                     <strong>Pays :</strong> {employee.country}
                   </p>
                   {isAdmin && (
-                    <Button
-                      variant="primary"
-                      onClick={() => handleEdit(employee._id)}
-                    >
-                      Modifier
-                    </Button>
+                    <div className="d-flex justify-content-around">
+                      <Button
+                        variant="primary"
+                        onClick={() => handleEdit(employee._id)}
+                      >
+                        Modifier
+                      </Button>
+                      <Button
+                        variant="danger"
+                        onClick={() => handleDelete(employee._id)}
+                      >
+                        Supprimer
+                      </Button>
+                    </div>
                   )}
                 </div>
               </div>

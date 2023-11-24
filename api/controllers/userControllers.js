@@ -13,7 +13,7 @@ const getRandomUser = async (req, res) => {
 
 const getUserProfile = async (req, res) => {
   try {
-    console.log(req.session);
+    console.log(req.session.userId);
     const userId = req.session.userId;
     const user = await User.findById(userId);
     if (!user) {
@@ -143,4 +143,24 @@ const editEmployee = async (req, res) => {
   }
 };
 
-module.exports = { getRandomUser, getUserProfile, updateUserProfile, addEmployee, editEmployee };
+const deleteEmployee = async (req, res) => {
+  try {
+    const employeeId = req.params.employeeId;
+
+    const deletedEmployee = await User.findByIdAndDelete(employeeId);
+
+    if (!deletedEmployee) {
+      return res.status(404).json({ success: false, message: 'Collaborateur non trouvé' });
+    }
+
+    res.json({
+      success: true,
+      message: 'Collaborateur supprimé avec succès',
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Erreur interne du serveur' });
+  }
+};
+
+module.exports = { getRandomUser, getUserProfile, updateUserProfile };

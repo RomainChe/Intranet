@@ -26,7 +26,7 @@ const AddEmployee = () => {
     e.preventDefault();
     try {
       await axios.post(
-        "http://localhost:8000/api/user/add-employee",
+        "http://localhost:8000/api/add-employee",
         formData,
         {
           headers: {

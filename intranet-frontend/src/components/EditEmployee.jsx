@@ -14,12 +14,13 @@ const EditEmployee = () => {
     country: "",
     email: "",
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchEmployeeData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/user/employee/${employeeId}`
+          `http://localhost:8000/api/employee/${employeeId}`
         );
         setFormData(response.data);
       } catch (error) {
@@ -27,6 +28,7 @@ const EditEmployee = () => {
       }
     };
 
+    setIsLoading(false);
     fetchEmployeeData();
   }, [employeeId]);
 
@@ -41,7 +43,7 @@ const EditEmployee = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `http://localhost:8000/api/user/edit-employee/${employeeId}`,
+        `http://localhost:8000/api/edit-employee/${employeeId}`,
         {
           ...formData,
           isAdmin: formData.isAdmin || false,
@@ -58,6 +60,10 @@ const EditEmployee = () => {
       console.error(error);
     }
   };
+
+  if (isLoading) {
+    return <div>Chargement...</div>;
+  }
 
   return (
     <Container>

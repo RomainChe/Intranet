@@ -8,9 +8,7 @@ const verifyToken = async (req, res, next) => {
   }
 
   try {
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET, {
-      algorithm: 'HS256',
-    });
+    const decodedToken = jwt.verify(token, 'gtest');
     const userId = decodedToken.userId;
 
     req.user = await User.findById(userId);
